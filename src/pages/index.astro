@@ -1,11 +1,16 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+	<nav class="fixed z-50 *:z-50 left-15 top-1/2 -translate-1/2 flex flex-col justify-center items-center">
+		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="#home">inicio</a>
+		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="">proyectos</a>
+		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="">tecnologias</a>
+		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="">contacto</a>
+	</nav>
+	<section id="home" class="w-full h-screen flex items-center justify-center flex-col">
+		<h1 class="text-6xl">Cesar Dominguez</h1>
+		<h2>Estudiante de Ingenieria en Computacion</h2>
+	</section>
 </Layout>
