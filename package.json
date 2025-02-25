@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
+    "@astrojs/vercel": "^8.0.8",
     "@heroui/react": "^2.7.2",
     "@heroui/system": "^2.4.10",
     "@heroui/theme": "^2.4.9",
