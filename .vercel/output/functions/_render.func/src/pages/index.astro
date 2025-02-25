@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/navigation/header';
+---
+
+<Layout>
+	<main class="w-full h-full *:z-40 flex flex-col items-center justify-center">
+		<Header client:load />
+		<h1 class="text-9xl font-bold max-md:text-6xl text-center">Cesar Dominguez</h1>
+		<p class="text-xl text-[#ffffff80]">Ingeniero en Computacion</p>
+	</main>
+</Layout>
