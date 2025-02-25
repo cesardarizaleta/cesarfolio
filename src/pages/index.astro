@@ -1,35 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import TiltedCard from '../components/TiltedCard.jsx';
-  
+import Header from '../components/navigation/header';
 ---
 
 <Layout>
-	<nav class="fixed z-50 *:z-50 left-15 top-1/2 -translate-1/2 flex flex-col max-md:hidden justify-center items-center">
-		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="#home">inicio</a>
-		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="#proyects">proyectos</a>
-		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="">tecnologias</a>
-		<a class="w-full cursor-pointer hover:text-xl transition-all text-center" href="">contacto</a>
-	</nav>
-	<section id="home" class="w-full h-screen flex items-center justify-center flex-col">
-		<h1 class="text-6xl text-wrap">Cesar Dominguez</h1>
-		<h2>Estudiante de Ingenieria en Computacion</h2>
-	</section>
-	<section id="proyects" class="w-full h-screen gap-20 flex items-center justify-center">
-		<TiltedCard
-		imageSrc="https://www.comunicare.es/wp-content/uploads/2021/03/plataformas-ecommerce-mejores-espana.jpg"
-		altText="eCommerce"
-		captionText="eCommerce"
-		containerHeight="300px"
-		containerWidth="300px"
-		imageHeight="300px"
-		imageWidth="300px" 
-		rotateAmplitude={12} 
-		scaleOnHover={1.2} 
-		showMobileWarning={false} 
-		showTooltip={true}
-		displayOverlayContent={true}
-		client:load
-		/>
-	</section>
+	<main class="w-full h-full *:z-40 flex flex-col items-center justify-center">
+		<Header client:load />
+		<h1 class="text-9xl font-bold max-md:text-6xl text-center">Cesar Dominguez</h1>
+		<p class="text-xl text-[#ffffff80]">Ingeniero en Computacion</p>
+	</main>
 </Layout>
