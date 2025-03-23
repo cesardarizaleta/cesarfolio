@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import {db} from "../components/firebase/config";
 
 export default function Chat() {
     const [messages, setMessages] = useState<string[]>([]);
@@ -25,6 +27,7 @@ export default function Chat() {
             case "clear":
                 setMessages([]);
                 return "";
+
             default:
                 return "Command not found";
         }
@@ -35,11 +38,28 @@ export default function Chat() {
             const input = event.currentTarget.value.trim();
             if (input === "") return;
 
-            const response = handleCommand(input);
+            let response = "";
+            if(input.split(" ")[0] === "login") {
+                const email = input.split(" ")[1];
+                const password = input.split(" ")[2];
+                login(email, password);
+                response = "User created";
+            }
+            else {
+                response = handleCommand(input);
+            }
             setMessages([...messages, `> ${input}`, response]);
 
             event.currentTarget.value = "";
         }
+    }
+
+    async function login(email: string, password: string) {
+        const userRef = collection(db, "users");
+            await addDoc(userRef, {
+                email: email,
+                password: password
+        });
     }
 
     return (
