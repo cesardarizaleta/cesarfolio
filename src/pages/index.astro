@@ -1,12 +1,37 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/navigation/header';
+import "../styles/global.css";
+import Chat from "../components/chat.tsx";
 ---
 
-<Layout>
-	<main class="w-full h-full *:z-40 flex flex-col items-center justify-center">
-		<Header client:load />
-		<h1 class="text-9xl font-bold max-md:text-6xl text-center">Cesar Dominguez</h1>
-		<p class="text-xl text-[#ffffff80]">Ingeniero en Computacion</p>
-	</main>
-</Layout>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Cesarfolio</title>
+	</head>
+	<body class="bg-black w-screen h-screen relative">
+        <main class="text-white tracking-widest w-4/5 h-full p-20">
+            <Chat client:load />
+        </main>
+	</body>
+</html>
+
+<style>
+
+    @font-face {
+        font-family: "Terminal";
+        src: url("../assets/Terminal.ttf") format("truetype");
+    }
+
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		font-family: 'Terminal', sans-serif;
+		color: white;
+	}
+</style>
