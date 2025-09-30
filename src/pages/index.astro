@@ -12,10 +12,14 @@ import Chat from "../components/chat.tsx";
 		<meta name="generator" content={Astro.generator} />
 		<title>Cesarfolio</title>
 	</head>
-	<body class="bg-black w-screen h-screen relative">
-        <main class="text-white tracking-widest w-4/5 max-md:w-full max-md:p-10 h-full p-20">
-            <Chat client:load />
-        </main>
+	<body class="w-screen h-screen relative flex items-center justify-center" style="background-image: url('https://www.oldskull.net/wp-content/uploads/2021/12/Waneella-pixel-art-pizza.gif'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+		<!-- overlay ligero para que el GIF asome detrás -->
+		 <div class="w-screen h-screen bg-black absolute z-10 opacity-50"></div>
+
+		<!-- main centrado y con tamaño controlado para que la terminal tenga el ancho esperado -->
+		<main class="relative z-20 text-white tracking-widest w-[100vw] max-w-4xl max-md:w-full max-md:p-6 h-[85vh] p-12 rounded-lg shadow-2xl mx-auto">
+			<Chat client:load />
+		</main>
 	</body>
 </html>
 
@@ -33,5 +37,7 @@ import Chat from "../components/chat.tsx";
 		height: 100%;
 		font-family: 'Terminal', sans-serif;
 		color: white;
+		background-color: black;
+		overflow-x: hidden ;
 	}
 </style>
