@@ -1,5 +1,10 @@
 # build output
 dist/
+.vercel/
+
+# tooling / playwright mcp artifacts
+.playwright-mcp/
+shots/
 
 # generated types
 .astro/
