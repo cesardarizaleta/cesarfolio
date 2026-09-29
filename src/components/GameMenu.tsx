@@ -1,81 +1,94 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { gsap } from "gsap";
+import { BookOpenText, BriefcaseBusiness, Code2, FolderKanban, Github, Gitlab, Linkedin, Send, UserRound, ZoomIn, ZoomOut } from "lucide-react";
 
-type Theme = {
+const SOCIAL_LINKS = [
+  { label: "GitHub", href: "https://github.com/cesardarizaleta", Icon: Github },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/cesardarizaleta", Icon: Linkedin },
+  { label: "GitLab", href: "https://gitlab.com/cesardarizaleta", Icon: Gitlab },
+] as const;
+
+type Module = {
   id: string;
-  num: string;
   label: string;
   kicker: string;
-  franchise: string;
-  jp: string;
-  motif: string;
-  tagline: string;
-  bg: string;
+  character: string;
+  origin: string;
+  subtitle: string;
+  description: string;
+  art: string;
+  tear: string;
 };
 
-const THEMES: Theme[] = [
+const NAV_ICONS = [UserRound, BookOpenText, Code2, FolderKanban, BriefcaseBusiness, Send] as const;
+
+const MODULES: Module[] = [
   {
     id: "fc4",
-    num: "01",
     label: "SOBRE MÍ",
-    kicker: "Quién soy",
-    franchise: "FAR CRY 4",
-    jp: "ファークライ 4",
-    motif: "KYRAT · REGIÓN AUTÓNOMA",
-    tagline: "Bienvenido a mi territorio.",
-    bg: "/backgrounds/farcry4.jpg",
+    kicker: "EL COMIENZO / はじまり",
+    character: "sanji",
+    origin: "ONE PIECE",
+    subtitle: "INGENIERO EN COMPUTACIÓN",
+    description: "Código, automatización y una forma muy personal de contar quién soy.",
+    art: "/art/sanji-eclipse.png",
+    tear: "/art/sanji-tear.png",
+  },
+  {
+    id: "origins",
+    label: "CÓMO EMPECÉ",
+    kicker: "LOS ORÍGENES / 原点",
+    character: "soldado de Black Ops III",
+    origin: "BLACK OPS III",
+    subtitle: "BLOG · RAPTOR · PYTHON · INGENIERÍA",
+    description: "Una curiosidad que empezó en un blog y terminó llevándome a Ingeniería en Computación.",
+    art: "/art/black-ops-iii-eclipse.png",
+    tear: "/art/black-ops-iii-tear.png",
   },
   {
     id: "tlou",
-    num: "02",
     label: "HABILIDADES",
-    kicker: "Con qué cuento",
-    franchise: "THE LAST OF US",
-    jp: "ザ・ラスト・オブ・アス",
-    motif: "EQUIPAJE · SUPERVIVENCIA",
-    tagline: "Lo que llevas cuando todo lo demás falla.",
-    bg: "/backgrounds/tlou.jpg",
+    kicker: "EL INVENTARIO / 道具",
+    character: "ellie",
+    origin: "THE LAST OF US",
+    subtitle: "HERRAMIENTAS PARA CONSTRUIR",
+    description: "Cada herramienta tiene una historia. Estas son las que me acompañan.",
+    art: "/art/ellie-eclipse.png",
+    tear: "/art/ellie-tear.png",
   },
   {
     id: "franxx",
-    num: "03",
     label: "PROYECTOS",
-    kicker: "Lo que he construido",
-    franchise: "DARLING IN THE FRANXX",
-    jp: "ダーリン・イン・ザ・フランキス",
-    motif: "PLANTACIÓN 13 · UNIDADES FRANXX",
-    tagline: "Encontrar a tu compañero es encontrar tu arma.",
-    bg: "/backgrounds/franxx.jpg",
+    kicker: "LO QUE CREO / 創造",
+    character: "zero two",
+    origin: "DARLING IN THE FRANXX",
+    subtitle: "PRODUCTO · FRONTEND · BACKEND",
+    description: "De una idea a algo real: proyectos hechos para funcionar.",
+    art: "/art/zero-two-eclipse.png",
+    tear: "/art/zero-two-tear.png",
   },
   {
     id: "horimiya",
-    num: "04",
     label: "EXPERIENCIA",
-    kicker: "Mi recorrido",
-    franchise: "HORIMIYA",
-    jp: "ホリミヤ",
-    motif: "クラス 3-1 · EXPEDIENTE",
-    tagline: "Las historias pequeñas también importan.",
-    bg: "/backgrounds/horimiya.jpg",
+    kicker: "EL CAMINO / 軌跡",
+    character: "hori & miyamura",
+    origin: "HORIMIYA",
+    subtitle: "EXPERIENCIA Y APRENDIZAJE",
+    description: "Las personas, lugares y retos que han moldeado mi trabajo.",
+    art: "/art/horimiya-eclipse.png",
+    tear: "/art/horimiya-tear.png",
   },
   {
     id: "onepiece",
-    num: "05",
     label: "CONTACTO",
-    kicker: "Zarpa conmigo",
-    franchise: "ONE PIECE",
-    jp: "ワンピース",
-    motif: "GRAND LINE · RECOMPENSA",
-    tagline: "El mar te espera. Levántate y navega.",
-    bg: "/backgrounds/onepiece.jpg",
+    kicker: "EL ENCUENTRO / 縁",
+    character: "zoro",
+    origin: "ONE PIECE",
+    subtitle: "EMPECEMOS UNA CONVERSACIÓN",
+    description: "Una buena historia suele comenzar con un mensaje.",
+    art: "/art/zoro-eclipse.png",
+    tear: "/art/zoro-tear.png",
   },
-];
-
-const BOOT_TIPS = [
-  "CONSEJO: usa ↑ ↓ para cambiar de mundo.",
-  "CONSEJO: ENTER abre el módulo seleccionado.",
-  "CONSEJO: ESC te devuelve al menú principal.",
-  "CONSEJO: cada módulo es un universo distinto.",
-  "CONSEJO: este portafolio no se hace scroll.",
 ];
 
 const SKILLS: { group: string; jp: string; items: [string, number, boolean?][] }[] = [
@@ -174,489 +187,269 @@ const COURSES = [
 ];
 
 function Bars({ group, jp, items }: { group: string; jp: string; items: [string, number, boolean?][] }) {
-  return (
-    <div className="skill-group">
-      <div className="skill-head">
-        <span className="skill-name">{group}</span>
-        <span className="skill-jp">{jp}</span>
-      </div>
-      {items.map(([name, pct, wip]) => (
-        <div className="skill-row" key={name}>
-          <span className="skill-item">{name}</span>
-          {wip && <span className="wip">EN PROCESO</span>}
-          <span className="skill-bar">
-            <i style={{ width: `${pct}%` }} />
-          </span>
-        </div>
-      ))}
-    </div>
-  );
+  return <div className="skill-group">
+    <div className="skill-head"><strong>{group}</strong><span lang="ja">{jp}</span></div>
+    {items.map(([name, pct, wip]) => <div className="skill-row" key={name}>
+      <span>{name}</span>{wip && <em>EN PROCESO</em>}
+      <i className="skill-bar"><b style={{ width: `${pct}%` }} /></i>
+    </div>)}
+  </div>;
 }
 
 function Section({ id }: { id: string }) {
-  if (id === "fc4") {
-    return (
-      <div className="sec sec-fc4">
-        <div className="dossier">
-          <div className="dossier-id">
-            <span className="tag">EXPEDIENTE · 01</span>
-            <h3>CÉSAR DOMÍNGUEZ</h3>
-            <p className="role">Ingeniero en Computación</p>
-            <p className="role dim">Desarrollador Full Stack &amp; DevOps</p>
-            <ul className="facts">
-              <li><span>ORIGEN</span>Parral, Valencia, Carabobo — Venezuela</li>
-              <li><span>ESTADO</span><b className="live">DISPONIBLE</b></li>
-              <li><span>EXPERIENCIA</span>+3 años</li>
-            </ul>
-            <div className="statline">
-              <div><strong>3+</strong><em>años</em></div>
-              <div><strong>5+</strong><em>proyectos</em></div>
-              <div><strong>16</strong><em>tecnologías</em></div>
-            </div>
-          </div>
-          <div className="dossier-body">
-            <p className="lead">
-              Soy una persona proactiva, organizada y responsable. Priorizo el código limpio, la
-              automatización y las soluciones que resuelven de verdad.
-            </p>
-            <p>
-              Llevo más de tres años construyendo software Full Stack y DevOps, y tengo un fuerte interés
-              en las telecomunicaciones: disfruto instalando y configurando routers. Mi especialidad es
-              llevar procesos manuales a sistemas automatizados que trabajan en tiempo real.
-            </p>
-            <div className="quote-fc">
-              <span>“</span> Un buen sistema no se nota. Simplemente funciona.
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (id === "fc4") return <div className="section-content about-content">
+    <h2>Una mente que construye.</h2>
+    <p className="intro">Ingeniero en Computación · Desarrollador Full Stack &amp; DevOps</p>
+    <div className="fact-strip"><span>VALENCIA, VENEZUELA</span><span>+3 AÑOS DE EXPERIENCIA</span><span className="available">DISPONIBLE</span></div>
+    <p>Soy una persona proactiva, organizada y responsable. Priorizo el código limpio, la automatización y las soluciones que resuelven de verdad.</p>
+    <p>Llevo más de tres años construyendo software Full Stack y DevOps, y tengo un fuerte interés en las telecomunicaciones: disfruto instalando y configurando routers. Mi especialidad es llevar procesos manuales a sistemas automatizados que trabajan en tiempo real.</p>
+    <div className="closing-line">“Un buen sistema no se nota. Simplemente funciona.”</div>
+  </div>;
 
-  if (id === "tlou") {
-    return (
-      <div className="sec sec-tlou">
-        <p className="field-note">
-          Notas de campo — todo lo que cargo en la mochila. Las barras marcan cuánta confianza tengo en
-          cada recurso. Lo que dice <b>EN PROCESO</b> todavía lo estoy aprendiendo.
-        </p>
-        <div className="grid-skills">
-          {SKILLS.map((g) => (
-            <Bars key={g.group} {...g} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (id === "franxx") {
-    return (
-      <div className="sec sec-franxx">
-        <p className="franxx-note">PLANTACIÓN 13 · REGISTRO DE UNIDADES DESPLEGADAS</p>
-        <div className="units">
-          {UNITS.map((u) => (
-            <article className="unit" key={u.name}>
-              <div className="unit-top">
-                <span className="unit-code">UNIDAD {u.code}</span>
-                <span className="unit-status">{u.status}</span>
-              </div>
-              <h3>{u.name}</h3>
-              <p>{u.desc}</p>
-              <div className="unit-meta">
-                <span>{u.role}</span>
-                <span className="dot" />
-                <span>{u.stack}</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (id === "horimiya") {
-    return (
-      <div className="sec sec-horimiya">
-        <article className="note-card">
-          <span className="tape" />
-          <span className="note-year">2025</span>
-          <h3>FIBEXTELECOM · ISP</h3>
-          <p className="note-role">Automatizador de Procesos · Presencial</p>
-          <p>
-            Diseño e implemento soluciones que optimizan los flujos internos de la empresa, integrando y
-            mejorando software administrativo y creando bots para reducir tareas manuales.
-          </p>
-          <ul className="ticks">
-            {FIBS.map((f) => (
-              <li key={f}>{f}</li>
-            ))}
-          </ul>
-        </article>
-
-        <div className="horimiya-cols">
-          <article className="note-card small">
-            <span className="tape tape-blue" />
-            <h4>EDUCACIÓN</h4>
-            <p className="edu">
-              <b>Universidad José Antonio Páez</b>
-              <span>2022 – Actualidad · Ingeniería en Computación</span>
-            </p>
-            <h4>IDIOMAS</h4>
-            <p className="edu">
-              <b>Inglés — Nivel B2</b>
-              <span>Certificado por CEVAC</span>
-            </p>
-          </article>
-          <article className="note-card small">
-            <span className="tape tape-pink" />
-            <h4>CURSOS</h4>
-            <ul className="courses">
-              {COURSES.map(([name, place, level]) => (
-                <li key={name}>
-                  <b>{name}</b>
-                  <span>{place}</span>
-                  <em>{level}</em>
-                </li>
-              ))}
-            </ul>
-          </article>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="sec sec-onepiece">
-      <div className="bounty">
-        <div className="bounty-inner">
-          <span className="bounty-top">MARINE · GRAND LINE</span>
-          <h3>SE BUSCA</h3>
-          <span className="bounty-namesub">WANTED · DEAD OR ALIVE</span>
-          <div className="bounty-silhouette" aria-hidden="true">
-            <span>海賊</span>
-          </div>
-          <p className="bounty-name">“EL DESARROLLADOR”</p>
-          <p className="bounty-real">CÉSAR DOMÍNGUEZ</p>
-          <div className="bounty-reward">
-            <span>RECOMPENSA</span>
-            <strong>฿ 300.000.000</strong>
-          </div>
-          <span className="bounty-seal">MARINE</span>
-        </div>
-      </div>
-      <div className="contact-list">
-        <a className="contact-row" href="mailto:cesardarizaleta@gmail.com">
-          <span>CORREO</span>
-          <b>cesardarizaleta@gmail.com</b>
-          <i>→</i>
-        </a>
-        <a className="contact-row" href="tel:+584144019911">
-          <span>TELÉFONO</span>
-          <b>0414-401 99 11</b>
-          <i>→</i>
-        </a>
-        <a className="contact-row" href="https://github.com/cesardarizaleta" target="_blank" rel="noreferrer">
-          <span>GITHUB</span>
-          <b>@cesardarizaleta</b>
-          <i>→</i>
-        </a>
-        <div className="contact-row static">
-          <span>BASE</span>
-          <b>Valencia, Carabobo — Venezuela</b>
-          <i>⚓</i>
-        </div>
-        <p className="contact-cta">¿Tienes una tripulación que necesita un navegante? Escríbeme.</p>
-      </div>
+  if (id === "origins") return <div className="section-content origin-content">
+    <h2>Así empezó todo.</h2>
+    <p className="intro">Antes de la ingeniería y de los proyectos, hubo una curiosidad que me llevó de una pregunta a otra.</p>
+    <div className="origin-timeline">
+      <article><span>01</span><div><h3>UN BLOG</h3><p>Comencé leyendo un blog sobre programación. Quería entender qué había detrás de todo eso.</p></div></article>
+      <article><span>02</span><div><h3>RAPTOR Y LA LÓGICA</h3><p>Vi videos sobre cómo programar en Raptor y empecé a seguir la lógica de los programas paso a paso.</p></div></article>
+      <article><span>03</span><div><h3>PYTHON</h3><p>Después conocí Python. Lo que veía me daba ganas de seguir indagando y probar más cosas.</p></div></article>
+      <article><span>04</span><div><h3>INGENIERÍA</h3><p>Entré a Ingeniería en Computación y todo fue una locura: distintos lenguajes, nuevas formas de pensar y lógica por todas partes.</p></div></article>
     </div>
-  );
+  </div>;
+
+  if (id === "tlou") return <div className="section-content">
+    <h2>Lo que llevo conmigo.</h2>
+    <p className="intro">Tecnologías, herramientas y campos que utilizo. Los recursos marcados como «en proceso» todavía los estoy aprendiendo.</p>
+    <div className="grid-skills">{SKILLS.map((g) => <Bars key={g.group} {...g} />)}</div>
+  </div>;
+
+  if (id === "franxx") return <div className="section-content">
+    <h2>Ideas en movimiento.</h2>
+    <p className="intro">Cinco proyectos construidos entre producto, automatización y seguridad.</p>
+    <div className="project-list">{UNITS.map((u) => <article className="project-item" key={u.name}>
+      <span className="project-index">{u.code}</span><div><h3>{u.name}</h3><p>{u.desc}</p><small>{u.role} <span>·</span> {u.stack}</small></div><span className="project-status">{u.status}</span>
+    </article>)}</div>
+  </div>;
+
+  if (id === "horimiya") return <div className="section-content">
+    <h2>El camino recorrido.</h2>
+    <div className="career-block"><span className="year">2025 — AHORA</span><h3>FIBEXTELECOM · ISP</h3><p className="intro">Automatizador de Procesos · Presencial</p><p>Diseño e implemento soluciones que optimizan los flujos internos de la empresa, integrando y mejorando software administrativo y creando bots para reducir tareas manuales.</p><ul>{FIBS.map((f) => <li key={f}>{f}</li>)}</ul></div>
+    <div className="career-grid"><div><h4>EDUCACIÓN</h4><p><b>Universidad José Antonio Páez</b><br />2022 – Actualidad · Ingeniería en Computación</p><h4>IDIOMAS</h4><p><b>Inglés — Nivel B2</b><br />Certificado por CEVAC</p></div><div><h4>CURSOS</h4><ul className="course-list">{COURSES.map(([name, place, level]) => <li key={name}><b>{name}</b><span>{place}</span><em>{level}</em></li>)}</ul></div></div>
+  </div>;
+
+  const routes = [
+    { number: "01", name: "CORREO", detail: "cesardarizaleta@gmail.com", href: "mailto:cesardarizaleta@gmail.com" },
+    { number: "02", name: "TELÉFONO", detail: "0414-401 99 11", href: "tel:+584144019911" },
+    { number: "03", name: "GITHUB", detail: "@cesardarizaleta", href: "https://github.com/cesardarizaleta" },
+  ];
+  return <div className="section-content contact-content">
+    <h2>Hablemos de tu idea.</h2>
+    <p className="intro">Desde Valencia, Venezuela. Si tienes algo que construir, aquí puedes encontrarme.</p>
+    <div className="contact-list">{routes.map((route) => <a key={route.name} href={route.href} target={route.href.startsWith("http") ? "_blank" : undefined} rel={route.href.startsWith("http") ? "noreferrer" : undefined}>
+      <span>{route.number}</span><strong>{route.name}</strong><small>{route.detail}</small><b aria-hidden="true">↗</b>
+    </a>)}</div>
+    <p className="signature">César Domínguez</p>
+  </div>;
 }
 
 export default function GameMenu() {
-  const [phase, setPhase] = useState<"boot" | "start" | "menu">("boot");
-  const [progress, setProgress] = useState(0);
-  const [tip, setTip] = useState(0);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const wipeRef = useRef<HTMLDivElement>(null);
+  const detailOverlayRef = useRef<HTMLDivElement>(null);
+  const detailPanelRef = useRef<HTMLDivElement>(null);
+  const sceneParallaxRef = useRef<{ image: HTMLImageElement; x: (value: number) => void; y: (value: number) => void } | null>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const lockedRef = useRef(false);
   const [active, setActive] = useState(0);
-  const [open, setOpen] = useState<number | null>(null);
-  const [sound, setSound] = useState(true);
-  const [attract, setAttract] = useState(false);
-  const [clock, setClock] = useState("--:--");
+  const [open, setOpen] = useState(false);
+  const [detailZoomed, setDetailZoomed] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const module = MODULES[active];
 
-  const audioRef = useRef<AudioContext | null>(null);
-  const soundRef = useRef(sound);
-  const idleRef = useRef<number | null>(null);
-  const openRef = useRef<number | null>(null);
-  const attractRef = useRef(false);
-
-  soundRef.current = sound;
-  openRef.current = open;
-  attractRef.current = attract;
-
-  const blip = useCallback((freq: number, dur: number, type: OscillatorType = "square", vol = 0.035) => {
-    if (!soundRef.current || typeof window === "undefined") return;
-    try {
-      const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (!Ctx) return;
-      if (!audioRef.current) audioRef.current = new Ctx();
-      const ac = audioRef.current;
-      if (ac.state === "suspended") ac.resume();
-      const osc = ac.createOscillator();
-      const gain = ac.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      const t = ac.currentTime;
-      gain.gain.setValueAtTime(vol, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      osc.start(t);
-      osc.stop(t + dur);
-    } catch {
-      /* audio no disponible */
+  const moveDetailImage = (event: ReactPointerEvent<HTMLElement>) => {
+    const image = event.currentTarget.querySelector<HTMLImageElement>(".detail-scene-image");
+    if (!image) return;
+    if (sceneParallaxRef.current?.image !== image) {
+      sceneParallaxRef.current = {
+        image,
+        x: gsap.quickTo(image, "x", { duration: .38, ease: "power3.out" }),
+        y: gsap.quickTo(image, "y", { duration: .38, ease: "power3.out" }),
+      };
     }
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - .5;
+    const y = (event.clientY - bounds.top) / bounds.height - .5;
+    sceneParallaxRef.current.x(x * -20);
+    sceneParallaxRef.current.y(y * -12);
+  };
+
+  const resetDetailImage = (event: ReactPointerEvent<HTMLElement>) => {
+    const image = event.currentTarget.querySelector<HTMLImageElement>(".detail-scene-image");
+    if (image && sceneParallaxRef.current?.image === image) {
+      sceneParallaxRef.current.x(0);
+      sceneParallaxRef.current.y(0);
+    }
+  };
+
+  const toggleDetailZoom = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    const nextZoom = !detailZoomed;
+    setDetailZoomed(nextZoom);
+    const image = event.currentTarget.closest(".detail-scene")?.querySelector<HTMLImageElement>(".detail-scene-image");
+    if (image) {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced) gsap.set(image, { scale: nextZoom ? 1.24 : 1.06 });
+      else gsap.to(image, { scale: nextZoom ? 1.24 : 1.06, duration: .72, ease: "power3.inOut", overwrite: "auto" });
+    }
+  };
+
+  const closeDetail = useCallback(() => {
+    setOpen(false);
+    setDetailZoomed(false);
+    sceneParallaxRef.current = null;
   }, []);
 
-  const hoverSfx = useCallback(() => blip(880, 0.06, "square", 0.028), [blip]);
-  const openSfx = useCallback(() => { blip(420, 0.1, "sawtooth", 0.03); setTimeout(() => blip(840, 0.14, "square", 0.03), 60); }, [blip]);
-  const backSfx = useCallback(() => { blip(520, 0.08, "square", 0.028); setTimeout(() => blip(300, 0.12, "square", 0.028), 60); }, [blip]);
+  const navigateTo = useCallback((index: number) => {
+    const next = (index + MODULES.length) % MODULES.length;
+    if (next === active || lockedRef.current) return;
+    const wipe = wipeRef.current;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!wipe || reduce) { setActive(next); closeDetail(); return; }
+    lockedRef.current = true;
+    setIsTransitioning(true);
+    timelineRef.current?.kill();
+    timelineRef.current = gsap.timeline({ onComplete: () => { gsap.set(wipe, { clearProps: "all" }); lockedRef.current = false; setIsTransitioning(false); } })
+      .set(wipe, { display: "block", xPercent: -110 })
+      .to(wipe, { xPercent: 0, duration: .26, ease: "power4.in" })
+      .call(() => { setActive(next); closeDetail(); })
+      .to(wipe, { xPercent: 110, duration: .42, ease: "power4.out" });
+  }, [active, closeDetail]);
 
-  useEffect(() => {
-    let p = 0;
-    const iv = window.setInterval(() => {
-      p += Math.random() * 12 + 4;
-      if (p >= 100) {
-        p = 100;
-        window.clearInterval(iv);
-        window.setTimeout(() => setPhase("start"), 420);
-      }
-      setProgress(Math.min(100, Math.round(p)));
-    }, 190);
-    const tipIv = window.setInterval(() => setTip((t) => (t + 1) % BOOT_TIPS.length), 1400);
-    return () => {
-      window.clearInterval(iv);
-      window.clearInterval(tipIv);
-    };
-  }, []);
+  const renderNavButton = (item: Module, index: number) => {
+    const Icon = NAV_ICONS[index] ?? UserRound;
+    return <button type="button" key={item.id} className={index === active ? "selected" : ""} onClick={() => navigateTo(index)} disabled={isTransitioning} aria-current={index === active ? "page" : undefined} aria-label={item.label} title={item.label}>
+      <Icon size={21} strokeWidth={1.75} aria-hidden="true" />
+    </button>;
+  };
 
-  const updateClock = useCallback(() => {
-    const d = new Date();
-    setClock(`${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`);
-  }, []);
+  useLayoutEffect(() => () => timelineRef.current?.kill(), []);
+  useLayoutEffect(() => {
+    if (!pageRef.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".hero-art", { scale: 1.08, opacity: .4 }, { scale: 1, opacity: 1, duration: 1.35, ease: "power3.out" });
+      gsap.fromTo(".tear-portal", { x: -80, opacity: 0, scaleX: .94 }, { x: 0, opacity: 1, scaleX: 1, duration: .75, ease: "power4.out", delay: .12, clearProps: "transform" });
+      gsap.fromTo(".hero-copy > *", { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: .68, stagger: .09, ease: "power3.out", delay: .13 });
+      gsap.fromTo(".social-rail a", { x: 18, opacity: 0 }, { x: 0, opacity: 1, duration: .5, stagger: .08, ease: "power2.out", delay: .3 });
+    }, pageRef);
+    return () => ctx.revert();
+  }, [active]);
 
-  useEffect(() => {
-    if (phase !== "menu") return;
-    updateClock();
-    const iv = window.setInterval(updateClock, 20000);
-    return () => window.clearInterval(iv);
-  }, [phase, updateClock]);
+  useLayoutEffect(() => {
+    const overlay = detailOverlayRef.current;
+    const panel = detailPanelRef.current;
+    if (!open || !overlay || !panel || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      gsap.timeline()
+        .fromTo(".detail-backdrop", { autoAlpha: 0 }, { autoAlpha: 1, duration: .34, ease: "power2.out" }, 0)
+        .fromTo(panel, {
+          autoAlpha: 0,
+          scaleX: .035,
+          scaleY: .78,
+          xPercent: 7,
+          rotateY: -15,
+          transformOrigin: "100% 50%",
+          filter: "brightness(1.75) drop-shadow(-28px 18px 36px rgba(0,0,0,.7))",
+        }, {
+          autoAlpha: 1,
+          scaleX: 1,
+          scaleY: 1,
+          xPercent: 0,
+          rotateY: 0,
+          filter: "brightness(1) drop-shadow(-20px 16px 32px rgba(0,0,0,.58))",
+          duration: .92,
+          ease: "elastic.out(1,.72)",
+        }, 0)
+        .fromTo(".detail-close", { scale: 0, rotation: -100, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: .42, ease: "back.out(2.6)" }, .36)
+        .fromTo(".detail-scene", {
+          clipPath: "polygon(50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%,50% 50%)",
+          autoAlpha: 0,
+          y: 20,
+          scale: .92,
+        }, {
+          clipPath: "polygon(0 4%,8% 2%,12% 5%,31% 1%,40% 3%,71% 0,76% 4%,100% 1%,98% 27%,100% 34%,97% 65%,99% 72%,96% 98%,73% 96%,66% 100%,42% 97%,31% 100%,2% 96%,3% 70%,0 62%,2% 35%,0 28%)",
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: .84,
+          ease: "power4.out",
+        }, .31)
+        .fromTo(".detail-scene-caption > *", { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .42, stagger: .08, ease: "power3.out" }, .83)
+        .fromTo(".detail-scene-glint", { xPercent: -310, autoAlpha: 0 }, { xPercent: 480, autoAlpha: .85, duration: .92, ease: "power2.inOut" }, .47)
+        .fromTo(".section-content > *", { y: 20, autoAlpha: 0, filter: "blur(5px)" }, { y: 0, autoAlpha: 1, filter: "blur(0px)", duration: .48, stagger: .055, ease: "power3.out", clearProps: "filter" }, .76);
+    }, overlay);
+    return () => ctx.revert();
+  }, [active, open]);
 
-  const wake = useCallback(() => {
-    setAttract(false);
-    if (idleRef.current) window.clearTimeout(idleRef.current);
-    idleRef.current = window.setTimeout(() => {
-      if (openRef.current === null) setAttract(true);
-    }, 9000);
-  }, []);
-
-  useEffect(() => {
-    if (phase !== "menu") return;
-    wake();
-    const iv = window.setInterval(() => {
-      if (openRef.current !== null || !attractRef.current) return;
-      setActive((i) => (i + 1) % THEMES.length);
-    }, 5200);
-    return () => window.clearInterval(iv);
-  }, [phase, wake]);
-
-  const select = useCallback((i: number, playSfx = true) => {
-    wake();
-    setActive((prev) => {
-      if (prev !== i && playSfx) hoverSfx();
-      return i;
-    });
-  }, [wake, hoverSfx]);
-
-  const openSection = useCallback((i: number) => {
-    wake();
-    openSfx();
-    setActive(i);
-    setOpen(i);
-  }, [wake, openSfx]);
-
-  const closeSection = useCallback(() => {
-    wake();
-    backSfx();
-    setOpen(null);
-  }, [wake, backSfx]);
-
-  useEffect(() => {
-    if (phase !== "menu") return;
-    const onKey = (e: KeyboardEvent) => {
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter", "Escape", " "].includes(e.key)) {
-        e.preventDefault();
-      }
-      if (open !== null) {
-        if (e.key === "Escape" || e.key === "Backspace") closeSection();
-        return;
-      }
-      if (e.key === "ArrowUp" || e.key === "ArrowLeft") select((active - 1 + THEMES.length) % THEMES.length);
-      else if (e.key === "ArrowDown" || e.key === "ArrowRight") select((active + 1) % THEMES.length);
-      else if (e.key === "Enter" || e.key === " ") openSection(active);
-      else if (/^[1-5]$/.test(e.key)) openSection(Number(e.key) - 1);
+  useLayoutEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { closeDetail(); return; }
+      if (event.target instanceof HTMLElement && event.target.closest("input,textarea,select,a")) return;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") { event.preventDefault(); navigateTo(active + 1); }
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") { event.preventDefault(); navigateTo(active - 1); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [phase, open, active, select, openSection, closeSection]);
+  }, [active, closeDetail, navigateTo]);
 
-  useEffect(() => {
-    if (phase !== "start") return;
-    const startNow = () => {
-      try {
-        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        if (Ctx && !audioRef.current) audioRef.current = new Ctx();
-      } catch {
-        /* sin audio */
-      }
-      blip(660, 0.16, "square", 0.04);
-      window.setTimeout(() => blip(990, 0.22, "square", 0.04), 90);
-      setPhase("menu");
-    };
-    const onKey = () => startNow();
-    window.addEventListener("keydown", onKey);
-    window.addEventListener("pointerdown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("pointerdown", onKey);
-    };
-  }, [phase, blip]);
-
-  const theme = THEMES[active];
-
-  return (
-    <div className={`game${open !== null ? " is-open" : ""}`} data-theme={theme.id}>
-      <div className="bg-stack" aria-hidden="true">
-        {THEMES.map((t, i) => (
-          <div
-            key={t.id}
-            className={`bg-layer${i === active ? " is-active" : ""}`}
-            style={{ backgroundImage: `url(${t.bg})` }}
-          />
-        ))}
-      </div>
-      <div className="scrim" aria-hidden="true" />
-      <div className="vignette" aria-hidden="true" />
-      <div className="scanlines" aria-hidden="true" />
-      <div className="grain" aria-hidden="true" />
-
-      {phase === "menu" && (
-        <>
-          <header className="hud-top">
-            <div className="hud-left">
-              <span className="brand-mark">CF</span>
-              <span className="brand-name">CESARFOLIO</span>
-              <span className="build">v1.0.0</span>
-            </div>
-            <div className="hud-right">
-              <span className="signal"><i /><i /><i /><i /></span>
-              <span className="hud-online">SESIÓN LOCAL</span>
-              <span className="hud-clock">{clock}</span>
-            </div>
-          </header>
-
-          <nav className="menu" aria-label="Menú principal">
-            <p className="menu-eyebrow">MENÚ PRINCIPAL</p>
-            <ul>
-              {THEMES.map((t, i) => (
-                <li key={t.id}>
-                  <button
-                    type="button"
-                    className={i === active ? "is-active" : ""}
-                    onMouseEnter={() => select(i)}
-                    onFocus={() => select(i)}
-                    onClick={() => openSection(i)}
-                  >
-                    <span className="mi-num">{t.num}</span>
-                    <span className="mi-body">
-                      <span className="mi-label">{t.label}</span>
-                      <span className="mi-kicker">{t.kicker}</span>
-                    </span>
-                    <span className="mi-franchise">{t.franchise}</span>
-                    <span className="mi-arrow">▶</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <aside className="world" aria-hidden={open !== null}>
-            <p className="world-motif">{theme.motif}</p>
-            <h2 className="world-title">{theme.franchise}</h2>
-            <p className="world-jp">{theme.jp}</p>
-            <p className="world-tagline">{theme.tagline}</p>
-            <p className="world-hint">
-              <kbd>ENTER</kbd> para abrir · <kbd>↑↓</kbd> para cambiar
-            </p>
-          </aside>
-
-          <footer className="hud-bottom">
-            <div className="hints">
-              <span><kbd>↑↓</kbd> NAVEGAR</span>
-              <span><kbd>ENTER</kbd> SELECCIONAR</span>
-              <span><kbd>ESC</kbd> VOLVER</span>
-              <span><kbd>1-5</kbd> ACCESO RÁPIDO</span>
-            </div>
-            <button type="button" className="sound-btn" onClick={() => { setSound((s) => !s); blip(700, 0.08, "square", 0.03); }}>
-              {sound ? "♪ SONIDO ON" : "♪ SONIDO OFF"}
-            </button>
-          </footer>
-
-          <div className="panel-wrap" aria-hidden={open === null}>
-            {open !== null && (
-              <div className="panel" role="dialog" aria-modal="true" aria-label={THEMES[open].label}>
-                <div className="panel-head">
-                  <div>
-                    <p className="panel-motif">{THEMES[open].motif}</p>
-                    <h2 className="panel-title">{THEMES[open].label}</h2>
-                    <p className="panel-sub">{THEMES[open].franchise} · {THEMES[open].jp}</p>
-                  </div>
-                  <button type="button" className="panel-close" onClick={closeSection}>
-                    ESC <span>✕</span>
-                  </button>
-                </div>
-                <div className="panel-body">
-                  <Section id={THEMES[open].id} />
-                </div>
-              </div>
-            )}
+  return <main className={`ink-world chapter-${module.id}`} ref={pageRef} data-module={module.id} aria-busy={isTransitioning}>
+    <div className="ink-frame">
+      <div className="hero-art" key={`art-${module.id}`} style={{ backgroundImage: `url(${module.art})` }} role="img" aria-label={`Ilustración de ${module.character}`} />
+      <div className="hero-shade" aria-hidden="true" />
+      <div className="frame-grain" aria-hidden="true" />
+      <header className="ink-header">
+        <button className="profile-avatar" type="button" onClick={() => navigateTo(0)} aria-label="Ir al inicio" title="César Domínguez · GitHub">
+          <img src="https://github.com/cesardarizaleta.png" alt="Foto de perfil de César Domínguez" width="47" height="47" />
+        </button>
+        <span className="brand-text">CESARFOLIO</span>
+        <nav className="top-nav" aria-label="Secciones del portafolio">
+          {MODULES.slice(0, 3).map(renderNavButton)}
+          <span className="nav-spacer" aria-hidden="true" />
+          {MODULES.slice(3).map((item, index) => renderNavButton(item, index + 3))}
+        </nav>
+      </header>
+      <div className="left-japanese" lang="ja" aria-hidden="true">想像を現実にする</div>
+      <button className="tear-portal" key={`tear-${module.id}`} type="button" onClick={() => { setDetailZoomed(false); setOpen(true); }} aria-label={`Explorar capítulo: ${module.label}`}>
+        <span className="tear-outline" aria-hidden="true" />
+        <span className="tear-visual" style={{ backgroundImage: `url(${module.tear})` }} aria-hidden="true" />
+        <span className="tear-action">EXPLORAR CAPÍTULO <b>↗</b></span>
+      </button>
+      <section className="hero-copy" aria-live="polite" key={`copy-${module.id}`}>
+        <p className="hero-kicker"><span className="red-cross">✳</span> {module.kicker} <span className="kicker-line" /></p>
+        <h1>{active === 0 ? <>CÉSAR <em>DOMÍNGUEZ</em></> : module.label}</h1>
+        <p className="hero-subtitle">{active === 0 ? "INGENIERO EN COMPUTACIÓN · FULL STACK & DEVOPS" : module.subtitle}</p>
+        <div className="hero-rule"><i /></div>
+        <p className="hero-description">{module.description}</p>
+      </section>
+      <nav className="social-rail" aria-label="Redes sociales">
+        {SOCIAL_LINKS.map(({ label, href, Icon }) => <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label}><Icon size={22} strokeWidth={1.6} aria-hidden="true" /></a>)}
+      </nav>
+      <div className="hero-character" aria-hidden="true">{module.character.toUpperCase()} <span>— {module.origin}</span></div>
+      <div className="frame-bottom"><span>© CÉSAR DOMÍNGUEZ</span><div className="chapter-dots" aria-label="Cambiar sección">{MODULES.map((item, i) => <button key={item.id} type="button" aria-label={`Ir a ${item.label}`} className={i === active ? "selected" : ""} onClick={() => navigateTo(i)} disabled={isTransitioning} />)}</div><span>VALENCIA, VENEZUELA</span></div>
+      <button className="side-next" type="button" onClick={() => navigateTo(active + 1)} disabled={isTransitioning} aria-label="Siguiente sección">→</button>
+      {open && <div className="detail-overlay" ref={detailOverlayRef} role="dialog" aria-modal="true" aria-label={`Información de ${module.label}`}>
+        <button className="detail-backdrop" type="button" onClick={closeDetail} aria-label="Cerrar información" />
+        <div className="detail-panel" key={`detail-${module.id}`} ref={detailPanelRef}>
+          <button className="detail-close" type="button" onClick={closeDetail} aria-label="Cerrar capítulo">✕</button>
+          <div className="detail-scroll">
+            <figure className="detail-scene" onPointerMove={moveDetailImage} onPointerLeave={resetDetailImage}>
+              <img className="detail-scene-image" src={module.tear} alt={`Ilustración de ${module.character} en ${module.origin}`} />
+              <span className="detail-scene-glint" aria-hidden="true" />
+              <figcaption className="detail-scene-caption"><span><b>{module.character.toUpperCase()}</b><small>{module.origin}</small></span><button className={detailZoomed ? "is-zoomed" : ""} type="button" aria-pressed={detailZoomed} aria-label={detailZoomed ? "Restablecer ilustración" : "Ampliar ilustración"} onClick={toggleDetailZoom}>{detailZoomed ? <ZoomOut size={17} /> : <ZoomIn size={17} />}</button></figcaption>
+            </figure>
+            <Section id={module.id} />
           </div>
-        </>
-      )}
-
-      {phase === "start" && (
-        <div className="boot start" onPointerDown={() => setPhase("menu")}>
-          <div className="boot-inner">
-            <p className="boot-tag">UN PORTAFOLIO INTERACTIVO</p>
-            <h1 className="boot-title">CESARFOLIO</h1>
-            <p className="boot-sub">FAR CRY 4 · THE LAST OF US · DARLING IN THE FRANXX · HORIMIYA · ONE PIECE</p>
-            <p className="press">PRESIONA CUALQUIER TECLA</p>
-          </div>
-          <span className="boot-foot">© 2026 CÉSAR DOMÍNGUEZ</span>
         </div>
-      )}
-
-      {phase === "boot" && (
-        <div className="boot">
-          <div className="boot-inner">
-            <p className="boot-tag">CARGANDO SISTEMA</p>
-            <h1 className="boot-title small">CESARFOLIO</h1>
-            <div className="bar">
-              <i style={{ width: `${progress}%` }} />
-            </div>
-            <p className="boot-progress">{progress}%</p>
-            <p className="boot-tip">{BOOT_TIPS[tip]}</p>
-          </div>
-          <span className="boot-foot">INICIALIZANDO MÓDULOS · 05</span>
-        </div>
-      )}
+      </div>}
+      <div className="ink-wipe" ref={wipeRef} aria-hidden="true"><span lang="ja">次の章へ</span><strong>CESARFOLIO</strong></div>
     </div>
-  );
+  </main>;
 }

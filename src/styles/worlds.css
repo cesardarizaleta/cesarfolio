@@ -1,0 +1,147 @@
+.sec { width: 100%; color: var(--ink); }
+.sec p { color: #55412e; }
+.sec h3, .sec h4 { color: #523123; }
+
+/* About: ship's log, written in ink on a folded page. */
+.dossier { display: grid; grid-template-columns: minmax(175px,.74fr) minmax(0,1fr); gap: clamp(14px,2vw,25px); }
+.dossier-id { padding: 16px 15px; border: 1px solid rgba(103,68,38,.5); background: rgba(255,244,219,.54); }
+.dossier-id .tag { font: 8px 'Special Elite',monospace; letter-spacing: .13em; color: var(--accent); }
+.dossier-id h3 { margin: 8px 0 3px; font: 1.55rem/.92 'Pirata One',serif; }
+.dossier-id .role { margin: 0; font-size: 12px; line-height: 1.35; }
+.dossier-id .role.dim { color: #795e3f; }
+.facts { list-style: none; margin: 13px 0 0; padding: 10px 0 0; border-top: 1px solid rgba(103,68,38,.35); display: grid; gap: 6px; }
+.facts li { display: flex; flex-direction: column; gap: 1px; font-size: 11px; line-height: 1.27; }
+.facts li span { font: 7px 'Special Elite',monospace; letter-spacing: .14em; color: #7a6142; }
+.facts .live { color: #406947; font: 10px 'Special Elite',monospace; letter-spacing: .08em; }
+.statline { display: flex; gap: clamp(8px,1.5vw,19px); margin-top: 12px; padding-top: 9px; border-top: 1px dashed rgba(103,68,38,.42); }
+.statline div { display: flex; flex-direction: column; }
+.statline strong { font: 1.55rem/.9 'Pirata One',serif; color: var(--accent); }
+.statline em { margin-top: 3px; font: 7px 'Special Elite',monospace; color: #725a3d; text-transform: uppercase; }
+.dossier-body .lead { margin: 0 0 10px; color: #4a3423; font-size: clamp(.91rem,1.12vw,1.03rem); line-height: 1.5; }
+.dossier-body p { margin: 0 0 9px; font-size: .84rem; line-height: 1.5; }
+.quote-fc { margin-top: 10px; padding: 9px 11px; border-top: 1px solid rgba(142,56,41,.46); border-bottom: 1px solid rgba(142,56,41,.24); color: #71382c; font: 1.18rem 'Pirata One',serif; }
+.quote-fc span { margin-right: 5px; font-size: 1.8rem; vertical-align: -5px; }
+
+/* Skills: inventory marks instead of software dashboard bars. */
+.field-note { margin: 0 0 12px; padding: 0 0 9px; border-bottom: 1px dashed rgba(81,59,37,.36); font-size: .83rem; line-height: 1.4; }
+.field-note b { color: var(--accent); font: 9px 'Special Elite',monospace; letter-spacing: .08em; }
+.grid-skills { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px 18px; }
+.skill-group { min-width: 0; padding: 9px 10px; background: rgba(255,244,217,.35); border-bottom: 1px solid rgba(105,70,38,.38); }
+.skill-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 1px solid rgba(105,70,38,.28); }
+.skill-name { font: 1.1rem 'Pirata One',serif; }
+.skill-jp { font-size: 9px; color: #755b3b; }
+.skill-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3px 8px; margin: 0 0 7px; }
+.skill-item { font-size: 10.5px; line-height: 1.2; }
+.wip { padding: 1px 3px; border: 1px solid rgba(136,62,42,.55); color: #923f2b; font: 6px 'Special Elite',monospace; }
+.skill-bar { position: relative; grid-column: 1/-1; height: 3px; overflow: hidden; background: rgba(72,54,33,.15); }
+.skill-bar i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg,#a34630,#d39745); }
+
+/* Projects: field notes from five completed voyages. */
+.franxx-note { margin: 0 0 10px; color: var(--accent); font: 8px 'Special Elite',monospace; letter-spacing: .12em; }
+.units { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.unit { position: relative; min-width: 0; padding: 11px 11px 10px; border: 1px solid rgba(105,70,38,.42); background: rgba(255,243,214,.45); }
+.unit::before { content: ""; position: absolute; top: -4px; right: -3px; width: 36px; border-top: 1px solid rgba(134,69,40,.42); transform: rotate(43deg); }
+.unit-top { display: flex; align-items: center; justify-content: space-between; gap: 7px; margin-bottom: 5px; }
+.unit-code { color: var(--accent); font: 8px 'Special Elite',monospace; letter-spacing: .08em; }
+.unit-status { color: #426543; font: 6px 'Special Elite',monospace; letter-spacing: .04em; }
+.unit h3 { margin: 0 0 4px; font: 1.13rem/1 'Pirata One',serif; }
+.unit p { margin: 0 0 7px; font-size: 10px; line-height: 1.32; }
+.unit-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; color: #6a5336; font: 7px 'Special Elite',monospace; letter-spacing: .04em; }
+.unit-meta .dot { width: 4px; height: 4px; background: #994834; transform: rotate(45deg); }
+
+/* Experience: pinned papers and hand-marked travel notes. */
+.note-card { position: relative; margin-bottom: 12px; padding: 15px 15px 12px; color: #443123; background: rgba(255,246,223,.68); border: 1px solid rgba(105,70,38,.36); box-shadow: 0 6px 15px rgba(68,47,26,.12); }
+.note-card .tape { position: absolute; top: -7px; left: 50%; width: 66px; height: 13px; background: rgba(214,177,111,.68); transform: translateX(-50%) rotate(-2deg); }
+.note-card .tape-blue { background: rgba(105,150,148,.45); }
+.note-card .tape-pink { background: rgba(177,108,99,.38); }
+.note-card h3 { margin: 0 0 3px; font: 1.45rem 'Pirata One',serif; }
+.note-card h4 { margin: 9px 0 6px; color: var(--accent); font: 8px 'Special Elite',monospace; letter-spacing: .1em; text-transform: uppercase; }
+.note-card .note-year { position: absolute; top: 12px; right: 13px; color: var(--accent); font: 1.2rem 'Pirata One',serif; }
+.note-role { margin: 0 0 8px; color: #73442e !important; font: 8px 'Special Elite',monospace; letter-spacing: .07em; text-transform: uppercase; }
+.note-card > p { margin: 0 0 8px; font-size: 10.5px; line-height: 1.42; }
+.ticks { list-style: none; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px 13px; margin: 8px 0 0; padding: 0; }
+.ticks li { position: relative; padding-left: 13px; color: #614a32; font-size: 9px; line-height: 1.25; }
+.ticks li::before { content: ""; position: absolute; left: 1px; top: .4em; width: 5px; height: 5px; border: 1px solid var(--accent); transform: rotate(45deg); }
+.horimiya-cols { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.note-card.small { padding: 13px 12px 10px; margin: 0; }
+.edu { display: flex; flex-direction: column; gap: 2px; margin: 0 0 7px; font-size: 10px; }
+.edu b { font-size: 11px; }
+.edu span { color: #715b3f; }
+.courses { list-style: none; display: grid; gap: 5px; margin: 0; padding: 0; }
+.courses li { display: flex; align-items: baseline; gap: 5px; padding-bottom: 4px; border-bottom: 1px dashed rgba(87,63,39,.26); font-size: 9px; }
+.courses li b { font-size: 10px; }
+.courses li span { color: #765f41; }
+.courses li em { margin-left: auto; color: #86513a; font: 7px 'Special Elite',monospace; text-transform: uppercase; }
+
+/* Contact: the smaller posters are real links with the same wanted-paper grammar. */
+.sec-onepiece { display: grid; grid-template-columns: minmax(130px,.7fr) minmax(0,1.35fr); gap: 12px; align-items: stretch; }
+.captain-note { position: relative; padding: 12px 10px; border: 1px solid rgba(100,65,36,.52); background: rgba(255,244,216,.5); text-align: center; }
+.captain-seal { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto 5px; border: 2px double var(--accent); border-radius: 50%; color: var(--accent); font: 1rem 'Pirata One',serif; transform: rotate(-9deg); }
+.captain-overline { margin: 0; color: #765a3a !important; font: 7px 'Special Elite',monospace; letter-spacing: .05em; }
+.captain-note h3 { margin: 7px 0 8px; color: var(--accent-deep); font: 1.55rem/.9 'Pirata One',serif; }
+.captain-note p:not(.captain-overline) { margin: 0; font-size: 9.5px; line-height: 1.35; }
+.captain-signature { display: block; margin-top: 9px; padding-top: 6px; border-top: 1px solid rgba(105,70,38,.34); font: 1.15rem 'Pirata One',serif; }
+.wanted-board { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; align-items: stretch; }
+.wanted-poster { display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-width: 0; padding: 8px 6px 6px; color: #493321; text-align: center; text-decoration: none; background: linear-gradient(160deg,#f8eac8,#e9d1a0); border: 4px solid #d7be90; outline: 1px solid #68492d; outline-offset: -8px; box-shadow: 0 8px 13px rgba(59,40,22,.18); transition: transform .22s, box-shadow .22s, background .22s; }
+.wanted-poster:nth-child(2) { transform: rotate(1deg) translateY(4px); }
+.wanted-poster:hover { transform: translateY(-6px) rotate(0); box-shadow: 0 14px 19px rgba(59,40,22,.26); background: #fff0cf; }
+.poster-top { font: 1.5rem 'Pirata One',serif; line-height: 1; }
+.poster-stamp { display: grid; place-items: center; flex: 1; width: 100%; margin: 5px 0; border-block: 1px solid rgba(112,79,45,.55); color: var(--accent); font: .94rem 'Pirata One',serif; }
+.wanted-poster strong { color: #743225; font: 1.1rem 'Pirata One',serif; }
+.poster-detail { max-width: 100%; margin-top: 3px; font: 7px 'Special Elite',monospace; overflow-wrap: anywhere; }
+.poster-foot { display: flex; justify-content: space-between; gap: 5px; width: 100%; margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(112,79,45,.55); font: 6px 'Special Elite',monospace; }
+.poster-foot i { font-style: normal; }
+
+@media (max-width: 900px) {
+  .dossier { grid-template-columns: minmax(140px,.7fr) minmax(0,1fr); gap: 11px; }
+  .note-card { padding: 12px; }
+}
+@media (max-width: 640px) {
+  .dossier { grid-template-columns: 1fr; gap: 8px; }
+  .dossier-id { padding: 9px; }
+  .dossier-id h3 { font-size: 1.2rem; }
+  .facts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px 10px; margin-top: 7px; padding-top: 6px; }
+  .statline { margin-top: 7px; padding-top: 6px; }
+  .dossier-body p { font-size: 9px; line-height: 1.35; }
+  .quote-fc { margin-top: 5px; padding: 5px 6px; font-size: .95rem; }
+  .field-note { margin-bottom: 7px; font-size: .72rem; }
+  .grid-skills { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .skill-group { padding: 6px; }
+  .skill-head { margin-bottom: 5px; }
+  .skill-name { font-size: .9rem; }
+  .skill-row { margin-bottom: 5px; gap: 2px 5px; }
+  .skill-item { font-size: 8px; }
+  .wip { font-size: 5px; }
+  .franxx-note { margin-bottom: 6px; font-size: 7px; }
+  .units { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .unit { padding: 7px; }
+  .unit h3 { font-size: .97rem; }
+  .unit p { font-size: 8px; line-height: 1.25; }
+  .unit-meta { font-size: 6px; }
+  .horimiya-cols { gap: 6px; }
+  .note-card { padding: 10px; margin-bottom: 7px; }
+  .note-card > p { font-size: 8px; }
+  .ticks { grid-template-columns: 1fr; gap: 4px; }
+  .ticks li { font-size: 7.5px; }
+  .note-card.small { padding: 9px; }
+  .edu { font-size: 8px; }
+  .edu b { font-size: 9px; }
+  .courses { gap: 3px; }
+  .courses li { gap: 3px; font-size: 7px; }
+  .courses li b { font-size: 8px; }
+  .courses li em { font-size: 5.5px; }
+  .sec-onepiece { grid-template-columns: 1fr; gap: 7px; }
+  .captain-note { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; padding: 8px; text-align: left; }
+  .captain-seal { grid-row: span 3; width: 30px; height: 30px; margin: auto; }
+  .captain-overline { align-self: end; }
+  .captain-note h3 { margin: 3px 0; font-size: 1.1rem; }
+  .captain-note p:not(.captain-overline) { font-size: 7.5px; }
+  .captain-signature { grid-column: 2; margin-top: 4px; padding-top: 3px; font-size: .9rem; }
+  .wanted-board { gap: 5px; }
+  .wanted-poster { min-height: 105px; padding: 6px 4px; border-width: 3px; outline-offset: -6px; }
+  .poster-top { font-size: 1.05rem; }
+  .poster-stamp { margin: 3px 0; font-size: .72rem; }
+  .wanted-poster strong { font-size: .8rem; }
+  .poster-detail { font-size: 5px; }
+  .poster-foot { font-size: 5px; }
+}
