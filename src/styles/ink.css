@@ -81,6 +81,7 @@ button:disabled { cursor: default; }
 .detail-close:hover { transform: rotate(90deg); border-color: #ed675b; background: #9e302a; }
 .detail-close:focus-visible,.detail-scene-caption button:focus-visible { outline: 2px solid #f7a098; outline-offset: 3px; }
 .detail-scroll { position: relative; z-index: 1; min-height: 0; flex: 1; overflow: auto; padding: 78px clamp(22px,4vw,55px) 72px; scrollbar-color: #9d332f #1a1b1d; scrollbar-width: thin; }
+.detail-scroll:focus-visible { outline: 1px solid #f7a098; outline-offset: -10px; }
 .detail-scene { --scene-torn-edge: polygon(0 4%,8% 2%,12% 5%,31% 1%,40% 3%,71% 0,76% 4%,100% 1%,98% 27%,100% 34%,97% 65%,99% 72%,96% 98%,73% 96%,66% 100%,42% 97%,31% 100%,2% 96%,3% 70%,0 62%,2% 35%,0 28%); position: relative; isolation: isolate; height: clamp(155px,24vh,230px); margin: 0 0 32px; overflow: hidden; background: #b93630; clip-path: var(--scene-torn-edge); filter: drop-shadow(0 14px 18px rgba(0,0,0,.36)); }
 .detail-scene::before { content: ''; position: absolute; z-index: 0; inset: 3px; background: #111214; clip-path: var(--scene-torn-edge); pointer-events: none; }
 .detail-scene-image { position: absolute; z-index: 1; inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); object-fit: cover; object-position: center 43%; clip-path: var(--scene-torn-edge); transform: scale(1.06); }
@@ -97,6 +98,12 @@ button:disabled { cursor: default; }
 .section-content p { margin: 0 0 16px; }
 .section-content h2 { margin: 20px 0 11px; color: #f3eee6; font: 700 clamp(2.6rem,5vw,4.8rem)/.98 'Barlow Condensed',sans-serif; letter-spacing: -.01em; }
 .section-content h3 { color: #f2ede6; font: 700 24px 'Barlow Condensed',sans-serif; letter-spacing: .06em; }
+.section-content > h3 { margin: 32px 0 12px; }
+.context-list { margin: 0; }
+.context-list > div { padding: 18px 0; border-bottom: 1px solid #493635; }
+.context-list dt { margin-bottom: 6px; color: #f2ede6; font: 700 21px 'Barlow Condensed',sans-serif; }
+.context-list dd { margin: 0; color: #d7d0c8; }
+.section-content .context-note { margin-top: 26px; color: #c7b6ad; font-size: 12px; }
 .section-content h4 { color: #e24840; font: 700 13px 'Barlow Condensed',sans-serif; letter-spacing: .25em; }
 .section-content .intro { color: #ede4dc; font-size: 14px; }
 .fact-strip { display: flex; flex-wrap: wrap; gap: 9px 20px; margin: 27px 0; padding: 14px 0; border-top: 1px solid #373234; border-bottom: 1px solid #373234; color: #a69e97; font: 700 11px 'Barlow Condensed',sans-serif; letter-spacing: .16em; }

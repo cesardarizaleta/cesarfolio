@@ -1,5 +1,15 @@
 # Visual assets
 
+## Skill inventory illustrations and technology logos
+
+`public/skills/frontend.png`, `backend.png`, and `infra.png` are conceptual editorial illustrations generated with the built-in ImageGen tool for the interactive skill inventory. They illustrate interface development, services and data, and networking infrastructure. They are not photographs of the owner's workspace. Prompts are in `SKILL_IMAGE_PROMPTS.md`.
+
+The SVG technology marks in `public/tech/` were downloaded from the [Devicon source repository](https://github.com/devicons/devicon/tree/master/icons). They are used to identify technologies already listed in the portfolio. Brand marks remain the property of their respective owners. Tools without a local technology mark use Lucide icons instead.
+
+## Content-focused dialog banners (October 2026)
+
+`public/banners/sobre-mi.png`, `como-empece.png`, `habilidades.png`, `proyectos.png`, `experiencia.png`, and `contacto.png` were generated with the built-in ImageGen tool for the six dialogs. They illustrate engineering, programming origins, development tools, software products, telecom operations, and collaboration respectively. They are conceptual editorial illustrations, not photographs of César's workspace or screenshots of his projects. The shared charcoal, ivory, and vermilion ink treatment matches the existing page. Full prompts are recorded in `BANNER_PROMPTS.md`.
+
 ## Current illustrated chapters (September 2026)
 
 `public/art/sanji-eclipse.png`, `ellie-eclipse.png`, `zero-two-eclipse.png`, `horimiya-eclipse.png`, and `zoro-eclipse.png` are original AI-generated fan-art illustrations created with Codex's built-in image generator for this portfolio. The user-supplied Japanese game-menu screenshot guided the composition: dark editorial framing, red eclipse, large right-side character, and open space for live text. It was a visual reference only; its text and interface were not copied. Each illustration used a distinct prompt describing the named character and franchise, with a shared direction of hand-inked anime art, black smoke, vermilion slashes, and no baked-in text or UI. Character and franchise rights remain with their respective owners.

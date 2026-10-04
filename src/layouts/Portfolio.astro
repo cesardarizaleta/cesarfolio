@@ -1,0 +1,21 @@
+---
+import '../styles/global.css';
+import '../styles/ink.css';
+import '../styles/details.css';
+import GameMenu from '../components/GameMenu';
+interface Props { initialActive?: number; initialOpen?: boolean; title?: string }
+const { initialActive = 0, initialOpen = false, title = 'César Domínguez — Portafolio' } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Portafolio de César Domínguez: desarrollo Full Stack, DevOps, automatización y telecomunicaciones." />
+    <meta name="theme-color" content="#101012" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body><GameMenu initialActive={initialActive} initialOpen={initialOpen} client:load /></body>
+</html>

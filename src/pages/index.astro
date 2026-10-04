@@ -1,24 +1,4 @@
 ---
-import "../styles/global.css";
-import "../styles/ink.css";
-import GameMenu from "../components/GameMenu.tsx";
+import Portfolio from '../layouts/Portfolio.astro';
 ---
-
-<!doctype html>
-<html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta
-			name="description"
-			content="Portafolio de César Domínguez: ingeniería, desarrollo Full Stack y DevOps en un universo visual inspirado en el anime y los videojuegos."
-		/>
-		<meta name="theme-color" content="#101012" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>César Domínguez — Portafolio</title>
-	</head>
-	<body>
-		<GameMenu client:load />
-	</body>
-</html>
+<Portfolio />

@@ -1,0 +1,12 @@
+---
+import Portfolio from '../layouts/Portfolio.astro';
+import { CHAPTERS } from '../lib/navigation';
+export function getStaticPaths() {
+  return CHAPTERS.flatMap((chapter, initialActive) => [false, true].map((initialOpen) => ({
+    params: { path: `${chapter.slug}${initialOpen ? '/detalle' : ''}` },
+    props: { initialActive, initialOpen, title: `${chapter.label} — César Domínguez` },
+  })));
+}
+const { initialActive, initialOpen, title } = Astro.props;
+---
+<Portfolio {initialActive} {initialOpen} {title} />

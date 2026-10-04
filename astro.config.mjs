@@ -11,8 +11,22 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['lucide-react', 'gsap'],
+    },
   },
   adapter: vercel(),
-  integrations: [react()],
+  integrations: [
+    react(),
+    {
+      name: 'isolated-vite-cache',
+      hooks: {
+        'astro:config:setup': ({ command, updateConfig }) => {
+          // Astro also creates Vite dev servers during builds; use Astro's command.
+          updateConfig({ vite: { cacheDir: `node_modules/.vite/astro-${command}` } });
+        },
+      },
+    },
+  ],
 });
